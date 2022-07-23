@@ -10,6 +10,9 @@ screen = pygame.display.set_mode((screen_width, screen_height))
 ## Config screen title
 pygame.display.set_caption("Balloon Shooter") ## Name of game
 
+## FPS
+clock = pygame.time.Clock()
+
 ## Import background image
 background = pygame.image.load("background.png")
 
@@ -24,29 +27,35 @@ character_y_pos = screen_height - character_height ## place character in bottom 
 ## Coordinates for character movement
 to_x = 0
 to_y = 0
+
+## movement speed
+character_speed = 0.6
+
 ## Event loop
 running = True # Check if game is running
 while running:
+    dt = clock.tick(60) # set game FPS
+
     for event in pygame.event.get():
         if event.type == pygame.QUIT: ## Emit on click on close btn
             running = False ## game is not running
         
         if event.type == pygame.KEYDOWN: # Check if key is pressed
             if event.key == pygame.K_LEFT: # move character to left
-                to_x -= 5 # to_x = to_x - 5
+                to_x -= character_speed # to_x = to_x - character_speed
             elif event.key == pygame.K_RIGHT: # move character to right
-                to_x += 5 # to_x = to_x + 5
+                to_x += character_speed # to_x = to_x + character_speed
             elif event.key == pygame.K_UP: # move char upward
-                to_y -= 5 # to_y = to_y - 5
+                to_y -= character_speed # to_y = to_y - character_speed
             elif event.key == pygame.K_DOWN: # move char downward
-                to_y += 5 # to_y = to_y + 5
+                to_y += character_speed # to_y = to_y + character_speed
         if event.type == pygame.KEYUP: # stop on key up
             if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT: ## key up for left right
                 to_x = 0
             if event.key == pygame.K_UP or event.key == pygame.K_DOWN:
                 to_y = 0
-    character_x_pos += to_x
-    character_y_pos += to_y
+    character_x_pos += to_x * dt
+    character_y_pos += to_y * dt
 
     # horizontal position constraint
     if character_x_pos < 0:
